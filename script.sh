@@ -19,7 +19,7 @@ cd /home/ec2-user
 # get source code from githubt
 git clone https://github.com/VenkataSridhar3012/autoscaling-elasticLoadBalance.git
 #get in project dir
-cd auto-scaling-nodejs-app
+cd autoscaler-elasticLoadBalance
 #give permission
 sudo chmod -R 755 .
 #install node module
