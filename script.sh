@@ -1,28 +1,36 @@
-#!/bin/bash -ex
-# output user data logs into a separate file for debugging
-exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-# download nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-# source nvm
-. /.nvm/nvm.sh
-# install node
-nvm install node
-#export NVM dir
-export NVM_DIR="/.nvm"	
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"	
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
-#upgrade yum
-sudo yum upgrade
-#install git
-sudo yum install git -y
+
+#!/bin/bash
+
+# Update the package list and install necessary dependencies
+sudo yum update -y
+sudo yum install -y curl git
+
+# Install Node.js and npm using NodeSource repository
+curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+sudo yum install -y nodejs
+
+# Check Node.js and npm versions
+node -v
+npm -v
+
+# Install Git
+sudo yum install -y git
+
+# Check Git version
+git --version
+
 cd /home/ec2-user
-# get source code from githubt
+# Clone the repository
 git clone https://github.com/VenkataSridhar3012/autoscaling-elasticLoadBalance.git
-#get in project dir
-cd autoscaler-elasticLoadBalance
-#give permission
+
+# Change into the cloned directory
+cd autoscaling-elasticLoadBalance
+
+# Set necessary permissions (adjust permissions according to your app's needs)
 sudo chmod -R 755 .
-#install node module
+
+# Install Node.js project dependencies
 npm install
-# start the app
+
+# Start the Node.js application
 node app.js > app.out.log 2> app.err.log < /dev/null &
